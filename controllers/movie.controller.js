@@ -74,4 +74,50 @@ const getMovie = async (req, res) => {
   }
 };
 
-export { createMovie, deleteMovie, getMovie };
+const updateMovie = async(req,res)=>{
+try {
+    const movieId = req.params.movieId;
+    // const updatedBody = req.body;
+    if(!movieId){
+        errorResponseBody.error = "Movie Id not found in request params";
+        errorResponseBody.message = "Movie ID is required to update a movie";
+        return res.status(400).json(errorResponseBody);
+    }
+    const response = await movieService.updateMovie(movieId,req.body);
+    if(response.error){
+        errorResponseBody.error = response.error;
+        errorResponseBody.message = "Cannot update movie";
+        return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message = "Movie updated successfully";
+    return res.status(200).json(successResponseBody);
+} catch (error) {
+    console.log("Error in fetching movie: ", error);
+    errorResponseBody.error = error;
+    errorResponseBody.message = "Something went wrong while update movie";
+
+    return res.status(500).json(errorResponseBody);
+}
+}
+
+const getMovies = async(req,res)=>{
+    try {
+        const data = await movieService.fetchMovie(req.query);
+        if(data.error){
+            errorResponseBody.error = data.error;
+            errorResponseBody.message = "Cannot fetch movie";
+            return res.status(data.code).json(errorResponseBody);
+        }
+        successResponseBody.data = data;
+        successResponseBody.message = "Movie fetched successfully";
+        return res.status(200).json(successResponseBody);
+    } catch (error) {
+        console.log("Error in fetching movie: ", error);
+        errorResponseBody.error = error;
+        errorResponseBody.message = "Something went wrong while fetching movie";
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
+export { createMovie, deleteMovie, getMovie, updateMovie, getMovies };

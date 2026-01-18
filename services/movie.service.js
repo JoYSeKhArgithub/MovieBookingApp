@@ -41,4 +41,43 @@ const getMovieById = async(movieId) => {
     return movie;
 }
 
-export default { getMovieById, createMovie, deleteMovie };
+const updateMovie = async(id,data)=>{
+    try {
+        const movie = await Movie.findByIdAndUpdate(id,data,{new: true,runValidators: true});
+        if(!movie){
+            return {
+                error: "Movie not found",
+                code: 404,
+            }
+        }
+        return movie;
+    } catch (error) {
+        let err = {};
+        if(error.name === 'ValidationError'){
+            Object.keys(error.errors).forEach((key)=>{
+                err[key] = error.errors[key].message;
+            })
+        }
+        console.log("Validation Error in updating movie: ", err);
+        return { error: err, code: 422 };
+    }
+}
+
+const fetchMovie = async(filter)=>{
+  let query = {};
+    if (filter.name){
+        query.name = { $regex: filter.name, $options: "i" };
+    }
+  
+
+  const movie = await Movie.find(query);
+  if (!movie) {
+    return {
+      error: "Movie not found",
+      code: 404,
+    };
+  }
+  return movie;
+}
+
+export default { getMovieById, createMovie, deleteMovie,updateMovie,fetchMovie };
