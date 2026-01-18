@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import connectDB from './db/index.js';
 import movieRouter from './routes/movie.route.js';
+import theaterRouter from './routes/theater.route.js';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
 
 app.use("/mba/api/v1", movieRouter);
+app.use("/mba/api/v1", theaterRouter);
 
 app.get('/home',(req,res)=>{
     return res.json({
