@@ -72,8 +72,8 @@ const deleteTheater = async(req,res)=>{
 
 const getAllTheaters = async (req, res) => {
   try {
-    const { city, pincode, name, limit, skip } = req.query;
-    const data = {city,pincode,name,limit: limit? Number(limit): undefined,skip: skip?Number(skip): undefined}
+    const { city, pincode, name, limit, skip, movieId } = req.query;
+    const data = {city,pincode,name,movieId,limit: limit? Number(limit): undefined,skip: skip?Number(skip): undefined}
     const theaters = await TheaterService.getAllTheaters(data);
     if(theaters.error){
       errorResponseBody.error = theaters.error;
@@ -136,7 +136,23 @@ const updatedMoviesInTheaters = async(req,res)=>{
   }
 }
 
-
+const getAllMoviesInATheater = async(req,res)=>{
+  try {
+    const response = await TheaterService.getAllMoviesInATheater(req.params.id);
+    if(response.error){
+      errorResponseBody.error = response.error;
+      errorResponseBody.message = "Getting error in get movies in theater";
+      return res.status(response.code).json(errorResponseBody)
+    }
+    successResponseBody.data =  response;
+    successResponseBody.message = "Successfully get the movies in theater";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+        console.log("The error is ",error);
+    errorResponseBody.error = error;
+    return res.status(500).json(errorResponseBody);
+  }
+}
 
 export {
   createTheater,
@@ -145,4 +161,5 @@ export {
   getAllTheaters,
   updatedTheater,
   updatedMoviesInTheaters,
+  getAllMoviesInATheater
 };

@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import mongoose from "mongoose";
 import bodyParser from 'body-parser';
 import connectDB from './db/index.js';
 import movieRouter from './routes/movie.route.js';
@@ -11,6 +12,8 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
+
+mongoose.set("debug", true);
 
 app.use("/mba/api/v1", movieRouter);
 app.use("/mba/api/v1", theaterRouter);

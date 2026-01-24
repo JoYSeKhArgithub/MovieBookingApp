@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTheater, deleteTheater, getAllTheaters, getTheaterById, updatedMoviesInTheaters } from "../controllers/theater.controller.js";
+import { createTheater, deleteTheater, getAllMoviesInATheater, getAllTheaters, getTheaterById, updatedMoviesInTheaters } from "../controllers/theater.controller.js";
 import validateTheaterMiddleware from '../middlewares/theater.middleware.js';
 import { updateMovie } from '../controllers/movie.controller.js';
 
@@ -20,5 +20,8 @@ router
     validateTheaterMiddleware.validateUpdatedMovies,
     updatedMoviesInTheaters,
   );
+
+  router.route('/theater/:id/movies').get(getAllMoviesInATheater)
+
 
 export default router;

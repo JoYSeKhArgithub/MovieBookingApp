@@ -1,3 +1,4 @@
+import Movie from "../models/movie.model.js";
 import Theater from "../models/theater.model.js";
 
 const createTheater = async(data)=>{
@@ -51,6 +52,10 @@ try {
   }
   if (data && data.name) {
     query.name = data.name;
+  }
+  if(data && data.movieId){
+    let movie = await Movie.findById(data.movieId);
+    query.movies = { $all: movie };
   }
   if (data && data.limit) {
     pagination.limit = data.limit;
@@ -136,6 +141,26 @@ try {
 }
 }
 
+const getAllMoviesInATheater = async(id)=>{
+    try {
+        const theater = await Theater.findById(id, {
+          name: 1,
+          movies: 1,
+          address: 1,
+        }).populate("movies");
+        if(!theater){
+            return {
+              error: "No theater found at this id",
+              code: 404,
+            };
+        }
+        return theater;
+    } catch (error) {
+        console.log("The error is",error);
+        throw error;
+    }
+}
+
 export default {
   createTheater,
   getTheaterById,
@@ -143,4 +168,5 @@ export default {
   getAllTheaters,
   updateTheater,
   updatedMoviesInTheaters,
+  getAllMoviesInATheater,
 };
