@@ -161,6 +161,22 @@ const getAllMoviesInATheater = async(id)=>{
     }
 }
 
+const checkMovie = async(theaterId,movieId)=>{
+try {
+  const response = await Theater.findById(theaterId);
+  if (!response) {
+    return {
+      error: "No theater is present in the Id",
+      code: 404,
+    };
+  }
+  return response.movies.indexOf(movieId) !== -1;
+} catch (error) {
+  console.log(error);
+  throw error;
+}
+}
+
 export default {
   createTheater,
   getTheaterById,
@@ -169,4 +185,5 @@ export default {
   updateTheater,
   updatedMoviesInTheaters,
   getAllMoviesInATheater,
+  checkMovie,
 };
