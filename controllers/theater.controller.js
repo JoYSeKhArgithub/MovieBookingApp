@@ -132,6 +132,7 @@ const updatedMoviesInTheaters = async(req,res)=>{
   } catch (error) {
     console.log("The error is ",error);
     errorResponseBody.error = error;
+    errorResponseBody.message = "Something went wrong during update movies in the theater";
     return res.status(500).json(errorResponseBody);
   }
 }
@@ -150,6 +151,27 @@ const getAllMoviesInATheater = async(req,res)=>{
   } catch (error) {
         console.log("The error is ",error);
     errorResponseBody.error = error;
+    errorResponseBody.message = "Something went wrong during get all movies in theaters";
+    return res.status(500).json(errorResponseBody);
+  }
+}
+
+const checkMovie = async (req,res)=>{
+  try {
+    const { theaterId, movieId } = req.params;
+   const response =  await TheaterService.checkMovie(theaterId,movieId)
+   if(response.error){
+    errorResponseBody.error = response.error;
+    errorResponseBody.message = "No Theater is present in this id";
+    return res.status(response.code).json(errorResponseBody);
+   }
+   successResponseBody.data = response;
+   successResponseBody.message = "Successfully check the movie in the theater";
+   return res.status(200).json(successResponseBody);
+  } catch (error) {
+    console.log("The error on check movie", error);
+    errorResponseBody.error = error;
+    errorResponseBody.message = "Something went wrong during get the movie in the theater";
     return res.status(500).json(errorResponseBody);
   }
 }
@@ -161,5 +183,6 @@ export {
   getAllTheaters,
   updatedTheater,
   updatedMoviesInTheaters,
-  getAllMoviesInATheater
+  getAllMoviesInATheater,
+  checkMovie,
 };
