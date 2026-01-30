@@ -1,5 +1,6 @@
 import mongoose,{Schema} from "mongoose";
 import bcrypt from "bcrypt";
+import { USER_ROLE, USER_STATUS } from "../utils/constant.js";
 
 
 const userSchema = new Schema(
@@ -31,12 +32,20 @@ const userSchema = new Schema(
     userRole: {
       type: String,
       required: true,
-      default: "CUSTOMER",
+      enum: {
+        values: [USER_ROLE.admin,USER_ROLE.client,USER_ROLE.customer],
+        message: "Invalid user role",
+      },
+      default: USER_ROLE.customer,
     },
     userStatus: {
       type: String,
       required: true,
-      default: "APPROVED",
+      enum: {
+        values: [USER_STATUS.rejected,USER_STATUS.pending,USER_STATUS.approved],
+        message: "Invalid user status",
+      },
+      default: USER_STATUS.approved,
     },
   },
   { timestamps: true },
@@ -48,7 +57,7 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.isPasswordCorrect = async function(password){
-  await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(password, this.password);
 }
 
 const User = mongoose.model('User',userSchema);
