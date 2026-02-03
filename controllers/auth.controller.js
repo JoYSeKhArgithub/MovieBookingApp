@@ -29,9 +29,7 @@ const signup = async (req, res) => {
 
 const signin = async(req,res)=>{
   try {
-    // const response = await userService.loginUser(req.body);
-    const user = await userService.getUserByEmail(req.body.email);
-    const isPasswordCorrect = await userService.checkPasswordCorrect(req.body.password);
+    const user = await userService.getUserByEmailandCheckPassword(req.body.email,req.body.password);
     successResponseBody.data = {
       email: user.email,
       role: user.userRole,

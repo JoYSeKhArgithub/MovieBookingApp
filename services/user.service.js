@@ -41,13 +41,17 @@ const createUser = async(data)=>{
     }
 } 
 
-const getUserByEmail = async (email)=>{
+const getUserByEmailandCheckPassword = async (email,password)=>{
   try {
     const response = await User.findOne({
       email: email
     })
     if(!response){
         throw {error: "No user found on given email",code: 404}
+    }
+    const isPasswordCorrectCheck = await response.isPasswordCorrect(password)
+    if(!isPasswordCorrectCheck){
+      throw {error: "Invalid password",code: 401}
     }
     return response;
   } catch (error) {
@@ -56,23 +60,11 @@ const getUserByEmail = async (email)=>{
   }
 }
 
-const checkPasswordCorrect = async(password)=>{
-  try {
-    const isPasswordCorrect = await User.isPasswordCorrect(password);
-    if(!isPasswordCorrect){
-      throw {error: "Invalid password for given user email",code: 401}
-    }
-    return isPasswordCorrect;
-  } catch (error) {
-    console.log("Error is ",error);
-    throw error;
-  }
-}
+
 
 
 
 export default {
   createUser,
-  getUserByEmail,
-  checkPasswordCorrect
+  getUserByEmailandCheckPassword,
 };
