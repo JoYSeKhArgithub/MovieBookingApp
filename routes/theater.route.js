@@ -2,6 +2,7 @@ import express from 'express';
 import { checkMovie, createTheater, deleteTheater, getAllMoviesInATheater, getAllTheaters, getTheaterById, updatedMoviesInTheaters } from "../controllers/theater.controller.js";
 import validateTheaterMiddleware from '../middlewares/theater.middleware.js';
 import { updateMovie } from '../controllers/movie.controller.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 router
@@ -10,7 +11,7 @@ router
 
 router.route("/theater/:theaterId").get(getTheaterById);
 
-router.route("/theater/:theaterId").delete(deleteTheater);
+router.route("/theater/:theaterId").delete(authMiddleware.isAuthenticated,deleteTheater);
 router.route("/theaters").get(getAllTheaters);
 router.route('/theater/:theaterId').put(updateMovie);
 router.route('/theater/:theaterId').patch(updateMovie);

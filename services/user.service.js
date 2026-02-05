@@ -60,11 +60,22 @@ const getUserByEmailandCheckPassword = async (email,password)=>{
   }
 }
 
+const getUserById = async (userId)=>{
+  try {
+    const user = await User.findById(userId);
+    if(!user){
+      throw {error: "No user found",code:404}
+    }
+    return user;
 
-
-
+  } catch (error) {
+    console.log("Error occure while fetching user by id",error);
+    throw error;
+  }
+}
 
 export default {
   createUser,
   getUserByEmailandCheckPassword,
+  getUserById
 };

@@ -3,6 +3,7 @@ import {
   successResponseBody,
 } from "../utils/responseBody.js";
 import userService from "../services/user.service.js";
+import jwt from 'jsonwebtoken';
 
 const signup = async (req, res) => {
   try {
@@ -30,12 +31,13 @@ const signup = async (req, res) => {
 const signin = async(req,res)=>{
   try {
     const user = await userService.getUserByEmailandCheckPassword(req.body.email,req.body.password);
+    const token = jwt.sign({id:user.id,email:user.email},process.env.JWT_SECRET_KEY,{expiresIn:'1h'})
     successResponseBody.data = {
       email: user.email,
       role: user.userRole,
       status: user.userStatus,
       username: user.userName,
-      token: ''
+      token: token
     };
     successResponseBody.message = 'Successfully logged in';
     return res.status(200).json(successResponseBody);
