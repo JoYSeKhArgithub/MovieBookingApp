@@ -53,4 +53,34 @@ const signin = async(req,res)=>{
   }
 }
 
-export { signup,signin };
+
+const resetPassword = async(req,res)=>{
+  try {
+    console.log("The user is ",req);
+    const user = await userService.getUserById(req.user);
+    const isOldPasswordCorrect = await user.isPasswordCorrect(req.body.oldPassword);
+    if(!isOldPasswordCorrect){
+      errorResponseBody.error = "Old password is incorrect";
+      errorResponseBody.message = "Error occuring on reset password";
+      return res.status(400).json(errorResponseBody);
+    }
+    user.password = req.body.newPassword;
+    await user.save();
+    successResponseBody.message = "Password reset successfully";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    console.log("The error is ",error);
+    if(error.error){
+      errorResponseBody.error = error.error;
+      errorResponseBody.message = "Error occuring on reset password";
+      return res.status(error.code).json(errorResponseBody);
+    }
+    errorResponseBody.error = error;
+    errorResponseBody.message = "Error occuring on reset password";
+    return res.status(500).json(errorResponseBody);
+  }
+}
+
+
+
+export { signup,signin,resetPassword };

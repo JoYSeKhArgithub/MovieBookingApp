@@ -6,6 +6,7 @@ import connectDB from './db/index.js';
 import movieRouter from './routes/movie.route.js';
 import theaterRouter from './routes/theater.route.js';
 import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ mongoose.set("debug", true);
 app.use("/mba/api/v1", movieRouter);
 app.use("/mba/api/v1", theaterRouter);
 app.use("/mba/api/v1", authRouter);
+app.use("/mba/api/v1", userRouter);
 
 app.get('/home',(req,res)=>{
     return res.json({

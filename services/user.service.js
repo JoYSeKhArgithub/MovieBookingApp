@@ -74,8 +74,31 @@ const getUserById = async (userId)=>{
   }
 }
 
+const updateUserRoleOrStatus = async(userId,data)=>{
+  try {
+    let updateQuery = {};
+    if(data.userRole){
+      updateQuery.userRole = data.userRole;
+    }
+    if(data.userStatus){
+        updateQuery.userStatus = data.userStatus
+    }
+    let response = await User.findByIdAndUpdate({
+      _id: userId
+    }, updateQuery,{new:true})
+
+    if(!response){
+      throw {error: "No user found for given id",code:404}
+     }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default {
   createUser,
   getUserByEmailandCheckPassword,
-  getUserById
+  getUserById,
+  updateUserRoleOrStatus
 };
