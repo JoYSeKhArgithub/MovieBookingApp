@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.route("/auth/signup").post(userMiddleWare.validateSignupRequest,signup);
 router.route("/auth/signin").post(userMiddleWare.validateSignInRequest,signin);
-router.route("/auth/reset-password").patch(authMiddleware.isAuthenticated,resetPassword);
+router.route("/auth/reset-password").patch(authMiddleware.isAuthenticated,authMiddleware.validateResetPasswordrequest,resetPassword);
 
 export default router;

@@ -83,15 +83,24 @@ const updateUserRoleOrStatus = async(userId,data)=>{
     if(data.userStatus){
         updateQuery.userStatus = data.userStatus
     }
+    console.log("update query is ",userId);
     let response = await User.findByIdAndUpdate({
       _id: userId
-    }, updateQuery,{new:true})
+    }, updateQuery,{new:true,runValidators: true})
 
     if(!response){
       throw {error: "No user found for given id",code:404}
      }
     return response;
   } catch (error) {
+    if (error.name === "ValidationError") {
+        let err = {};
+        Object.keys(error.errors).forEach((key) => {
+          err[key] = error.errors[key].message;
+        });
+        console.log("Validation Error in creating theater: ", err);
+        return { error: err, code: 422 };
+      }
     throw error;
   }
 }
