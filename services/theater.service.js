@@ -1,5 +1,6 @@
 import Movie from "../models/movie.model.js";
 import Theater from "../models/theater.model.js";
+import { STATUS } from "../utils/constant.js";
 
 const createTheater = async(data)=>{
     try {
@@ -12,7 +13,7 @@ const createTheater = async(data)=>{
           err[key] = error.errors[key].message;
         });
         console.log("Validation Error in creating theater: ", err);
-        return { error: err, code: 422 };
+        return { error: err, code: STATUS.UNPROCESSABLE_ENTITY };
       }
         throw new Error(error);
     }
@@ -23,7 +24,7 @@ const getTheaterById = async(theaterId)=>{
     if(!theater){
         return {
           error: "Theater not found",
-          code: 404,
+          code: STATUS.NOT_FOUND,
         };
     }
     return theater;
@@ -34,7 +35,7 @@ const deleteTheater = async(theaterId)=>{
     if(!deleteData){
         return {
             error : 'Theater not found',
-            code: 404,
+            code: STATUS.NOT_FOUND,
         }
     }
     return deleteData;
@@ -69,7 +70,7 @@ try {
   if (theaters.length === 0) {
     return {
       error: "No Theaters found",
-      code: 404,
+      code: STATUS.NOT_FOUND,
     };
   }
   return theaters;
@@ -88,7 +89,7 @@ const updateTheater = async(id,data)=>{
         if(!updatedTheater){
             return {
                 error: "Thaeter not found",
-                code: 404,
+                code: STATUS.NOT_FOUND,
             }
         }
         return updateTheater;
@@ -99,7 +100,7 @@ const updateTheater = async(id,data)=>{
                 err[key] = error.errors[key].message;
             });
             console.log("Validation Error in creating theater: ", err);
-            return { error: err, code: 422 };
+            return { error: err, code: STATUS.UNPROCESSABLE_ENTITY };
         }
         throw new Error(error)
     }
@@ -131,7 +132,7 @@ try {
 } catch (error) {
     if(error.name === 'CastError'){
         return{
-            code: 404,
+            code: STATUS.NOT_FOUND,
             error: 'No Theater found for given id'
         }
     }
@@ -151,7 +152,7 @@ const getAllMoviesInATheater = async(id)=>{
         if(!theater){
             return {
               error: "No theater found at this id",
-              code: 404,
+              code: STATUS.NOT_FOUND,
             };
         }
         return theater;
@@ -167,7 +168,7 @@ try {
   if (!response) {
     return {
       error: "No theater is present in the Id",
-      code: 404,
+      code: STATUS.NOT_FOUND,
     };
   }
   return response.movies.indexOf(movieId) !== -1;

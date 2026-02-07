@@ -1,4 +1,5 @@
 import TheaterService from '../services/theater.service.js';
+import { STATUS } from '../utils/constant.js';
 import { errorResponseBody, successResponseBody } from '../utils/responseBody.js';
 
 const createTheater = async(req,res)=>{
@@ -11,11 +12,11 @@ const createTheater = async(req,res)=>{
         }
         successResponseBody.data = theater;
         successResponseBody.message = "Theater created successfully";
-        return res.status(201).json(successResponseBody);
+        return res.status(STATUS.CREATED).json(successResponseBody);
     } catch (error) {
         errorResponseBody.error = error;
         errorResponseBody.message = "Something went wrong while creating theater";
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
@@ -25,7 +26,7 @@ const getTheaterById = async(req,res)=>{
         if(!tId){
             errorResponseBody.error = "Theater ID not found in request params";
             errorResponseBody.message = "Theater ID is required to fetch a theater";
-            return res.status(400).json(errorResponseBody);
+            return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
         }
         const theater = await TheaterService.getTheaterById(tId);
         if(theater.error){
@@ -36,13 +37,13 @@ const getTheaterById = async(req,res)=>{
 
         successResponseBody.data = theater;
         successResponseBody.message = "Theater fetched successfully";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.ok).json(successResponseBody);
 
     } catch (error) {
         errorResponseBody.error = error;
         errorResponseBody.message =
           "Something went wrong while getting theater";
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
@@ -52,7 +53,7 @@ const deleteTheater = async(req,res)=>{
         if(!theaterId){
             errorResponseBody.error = "Theater ID not found in request params";
             errorResponseBody.message = "Theater ID is required to delete a theater";
-            return res.status(400).json(errorResponseBody);
+            return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
         }
         const deletedData = await TheaterService.deleteTheater(theaterId);
         if(deletedData.error){
@@ -62,11 +63,11 @@ const deleteTheater = async(req,res)=>{
         }
         successResponseBody.data = deletedData;
         successResponseBody.message = "Theater deleted successfully";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.ok).json(successResponseBody);
     } catch (error) {
         errorResponseBody.error = error;
         errorResponseBody.message = "Something went wrong while deleting theater";
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
@@ -83,11 +84,11 @@ const getAllTheaters = async (req, res) => {
 
     successResponseBody.data = theaters;
     successResponseBody.message = "Successfully fetched all the theaters";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.ok).json(successResponseBody);
   } catch (error) {
     errorResponseBody.error = error;
     errorResponseBody.message = "Something went wrong during get all theaters";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 };
 
@@ -97,7 +98,7 @@ const updatedTheater = async(req,res)=>{
     if (!theaterId) {
       errorResponseBody.error = "Theater Id not found in request params";
       errorResponseBody.message = "Theater ID is required to update a movie";
-      return res.status(500).json(errorResponseBody);
+      return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
     const response = await TheaterService.updateTheater(theaterId, req.body);
     if (response.error) {
@@ -107,11 +108,11 @@ const updatedTheater = async(req,res)=>{
     }
     successResponseBody.data = response;
     successResponseBody.message = "Movie updated successfully";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.ok).json(successResponseBody);
   } catch (error) {
     errorResponseBody.error = error;
     errorResponseBody.message = "Something went wrong during update theaters";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 }
 
@@ -128,12 +129,12 @@ const updatedMoviesInTheaters = async(req,res)=>{
     }
     successResponseBody.data = response;
     successResponseBody.message = "Successfully updated movies in the theaters";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.ok).json(successResponseBody);
   } catch (error) {
     console.log("The error is ",error);
     errorResponseBody.error = error;
     errorResponseBody.message = "Something went wrong during update movies in the theater";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 }
 
@@ -147,12 +148,12 @@ const getAllMoviesInATheater = async(req,res)=>{
     }
     successResponseBody.data =  response;
     successResponseBody.message = "Successfully get the movies in theater";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.ok).json(successResponseBody);
   } catch (error) {
         console.log("The error is ",error);
     errorResponseBody.error = error;
     errorResponseBody.message = "Something went wrong during get all movies in theaters";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 }
 
@@ -167,12 +168,12 @@ const checkMovie = async (req,res)=>{
    }
    successResponseBody.data = response;
    successResponseBody.message = "Successfully check the movie in the theater";
-   return res.status(200).json(successResponseBody);
+   return res.status(STATUS.ok).json(successResponseBody);
   } catch (error) {
     console.log("The error on check movie", error);
     errorResponseBody.error = error;
     errorResponseBody.message = "Something went wrong during get the movie in the theater";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 }
 

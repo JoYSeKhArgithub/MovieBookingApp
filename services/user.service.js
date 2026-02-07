@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { USER_ROLE,USER_STATUS } from "../utils/constant.js";
+import { STATUS, USER_ROLE,USER_STATUS } from "../utils/constant.js";
 
 const createUser = async(data)=>{
     try {
@@ -11,13 +11,13 @@ const createUser = async(data)=>{
         if(existingUser){
             return {
               error: "Email or username already exists",
-              code: 409,
+              code: STATUS.ALLREADY_EXIST,
             };
         }
 
         if(!userRole || userRole === USER_ROLE.customer){
           if(userStatus && userStatus !== USER_STATUS.approved){
-            throw {error: "We cannot set any other status for customer",code:400}
+            throw {error: "We cannot set any other status for customer",code:STATUS.BAD_REQUEST}
           }
         }
 
@@ -34,7 +34,7 @@ const createUser = async(data)=>{
           err[key] = error.errors[key].message;
         });
         console.log("Validation Error in creating theater: ", err);
-        throw { error: err, code: 422 };
+        throw { error: err, code: STATUS.UNPROCESSABLE_ENTITY };
       }
         console.log("The error occure during createUser",error);
         throw error;
@@ -47,11 +47,11 @@ const getUserByEmailandCheckPassword = async (email,password)=>{
       email: email
     })
     if(!response){
-        throw {error: "No user found on given email",code: 404}
+        throw {error: "No user found on given email",code: STATUS.NOT_FOUND}
     }
     const isPasswordCorrectCheck = await response.isPasswordCorrect(password)
     if(!isPasswordCorrectCheck){
-      throw {error: "Invalid password",code: 401}
+      throw {error: "Invalid password",code: STATUS.UNAUTHORIZED}
     }
     return response;
   } catch (error) {
@@ -64,7 +64,7 @@ const getUserById = async (userId)=>{
   try {
     const user = await User.findById(userId);
     if(!user){
-      throw {error: "No user found",code:404}
+      throw {error: "No user found",code:STATUS.NOT_FOUND}
     }
     return user;
 
@@ -84,12 +84,10 @@ const updateUserRoleOrStatus = async(userId,data)=>{
         updateQuery.userStatus = data.userStatus
     }
     console.log("update query is ",userId);
-    let response = await User.findByIdAndUpdate({
-      _id: userId
-    }, updateQuery,{new:true,runValidators: true})
+    let response = await User.findByIdAndUpdate(userId, updateQuery,{new:true,runValidators: true})
 
     if(!response){
-      throw {error: "No user found for given id",code:404}
+      throw {error: "No user found for given id",code:STATUS.NOT_FOUND}
      }
     return response;
   } catch (error) {
@@ -99,7 +97,7 @@ const updateUserRoleOrStatus = async(userId,data)=>{
           err[key] = error.errors[key].message;
         });
         console.log("Validation Error in creating theater: ", err);
-        return { error: err, code: 422 };
+        return { error: err, code: STATUS.UNPROCESSABLE_ENTITY };
       }
     throw error;
   }

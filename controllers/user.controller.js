@@ -1,4 +1,5 @@
 import userService from "../services/user.service.js";
+import { STATUS } from "../utils/constant.js";
 import { errorResponseBody,successResponseBody } from "../utils/responseBody.js";
 
 
@@ -12,7 +13,7 @@ const userUpdate = async(req,res)=>{
     }
     successResponseBody.data = response;
     successResponseBody.message = "Successfully updated user";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.CREATED).json(successResponseBody);
 
   } catch (error) {
     console.log("The error is ",error);
@@ -23,7 +24,7 @@ const userUpdate = async(req,res)=>{
     }
     errorResponseBody.error = error;
     errorResponseBody.message = "Error occuring on update user";
-    return res.status(500).json(errorResponseBody);
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 }
 
