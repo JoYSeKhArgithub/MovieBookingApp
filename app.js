@@ -7,6 +7,7 @@ import movieRouter from './routes/movie.route.js';
 import theaterRouter from './routes/theater.route.js';
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
+import bookingRoter from "./routes/booking.route.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/mba/api/v1", movieRouter);
 app.use("/mba/api/v1", theaterRouter);
 app.use("/mba/api/v1", authRouter);
 app.use("/mba/api/v1", userRouter);
+app.use("/mba/api/v1", bookingRoter);
 
 app.get('/home',(req,res)=>{
     return res.json({
