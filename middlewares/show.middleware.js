@@ -51,4 +51,12 @@ const validateCreateShowRequest = async (req,res,next)=>{
     next()
 }
 
-export default {validateCreateShowRequest}
+const validateUpdateShowRequest = async(req,res,next) =>{
+    if(req.body.theaterId || req.body.movieId){
+        errorResponseBody.error = "We cannot update the movie id or theater id"
+        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody)
+    }
+    next()
+}
+
+export default {validateCreateShowRequest,validateUpdateShowRequest}
