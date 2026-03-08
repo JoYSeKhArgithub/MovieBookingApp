@@ -9,6 +9,7 @@ import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import bookingRoter from "./routes/booking.route.js";
 import showRouter from "./routes/show.route.js";
+import paymentRouter from "./routes/payment.route.js";
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ app.use("/mba/api/v1", authRouter);
 app.use("/mba/api/v1", userRouter);
 app.use("/mba/api/v1", bookingRoter);
 app.use("/mba/api/v1", showRouter);
+app.use("/mba/api/v1", paymentRouter);
+
 
 
 app.get('/home',(req,res)=>{
