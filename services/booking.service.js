@@ -1,9 +1,26 @@
 import Booking from "../models/booking.model.js";
-import { STATUS } from "../utils/constant.js";
+import Payment from "../models/payment.model.js";
+import Show from "../models/show.model.js";
+import User from "../models/user.model.js";
+import { STATUS, USER_ROLE } from "../utils/constant.js";
 
 const createBooking = async(data)=>{
     try {
+        const show = await Show.findOne({
+            movieId: data.movieId,
+            theaterId: data.theaterId,
+            timing: data.timing
+        })
+        data.totalCost = show.price * data.noOfSeats;
+        if(show.noOfSeats < data.noOfSeats){
+            throw {
+                error: "Seats are not available for the given number of seats",
+                code: STATUS.BAD_REQUEST
+            }
+        }
         const result = await Booking.create(data);
+        // show.noOfSeats = show.noOfSeats - data.noOfSeats;
+        await show.save();
         return result;
     } catch (error) {
         if(error.name === 'ValidationError'){
@@ -65,5 +82,7 @@ const getBookingById = async(id)=>{
         throw error;
     }
 }
+
+
 
 export default {createBooking,update,getBookings,getBookingById};

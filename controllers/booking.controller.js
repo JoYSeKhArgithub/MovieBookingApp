@@ -93,4 +93,6 @@ const getBookingById = async(req,res)=>{
     }
 }
 
+
+
 export {createBooking,updatebooking,getBookings,getAllBookings,getBookingById};

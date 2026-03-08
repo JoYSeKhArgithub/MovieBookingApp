@@ -41,10 +41,6 @@ const bookingMiddleWare = async(req,res,next)=>{
         errorResponseBody.error = "seats is required ";
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
-    if(!req.body.totalCost){
-        errorResponseBody.error = "totalCost is required in request body";
-        return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    }
     next();
 }
 

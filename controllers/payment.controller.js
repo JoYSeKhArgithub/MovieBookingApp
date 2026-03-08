@@ -29,4 +29,35 @@ const createPayment = async(req,res)=>{
     }
 }
 
-export {createPayment}
+const getPaymentDetailsById = async(req,res)=>{
+    try {
+        const response = await paymentService.getPaymentById(req.params.id);
+        successResponseBody.data = response;
+        successResponseBody.message = "Payment details fetched successfully";
+        return res.status(STATUS.ok).json(successResponseBody);
+    } catch (error) {
+        if(error.error){
+            errorResponseBody.error = error.error;
+            return res.status(error.code).json(errorResponseBody)
+        }
+        errorResponseBody.error = error;
+        errorResponseBody.message = "Internal server error";
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody)
+    }
+}
+
+const getAllPayments = async(req,res)=>{
+    try {
+        const response = await paymentService.getAllPayments(req.user);
+        successResponseBody.data = response;
+        successResponseBody.message = "Payments fetched successfully";
+        return res.status(STATUS.ok).json(successResponseBody);
+    } catch (error) {
+
+        errorResponseBody.error = error;
+        errorResponseBody.message = "Internal server error to fetch payments";
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
+export {createPayment,getPaymentDetailsById,getAllPayments}

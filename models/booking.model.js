@@ -27,13 +27,13 @@ const bookingSchema = new Schema({
     },
     totalCost:{
         type: Number,
-        required: true
+        // required: true
     },
     status:{
         type: String,
         required: true,
         enum:{
-            values:[BOOKING_STATUS.IN_PROCESS,BOOKING_STATUS.CANCELLED,BOOKING_STATUS.SUCCESSFULL],
+            values:[BOOKING_STATUS.IN_PROCESS,BOOKING_STATUS.CANCELLED,BOOKING_STATUS.SUCCESSFULL,BOOKING_STATUS.EXPIRED],
             message: "Invalid booking status"
         },
         default: BOOKING_STATUS.IN_PROCESS
