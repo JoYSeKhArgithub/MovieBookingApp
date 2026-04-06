@@ -1,10 +1,9 @@
-import User from "../models/user.model.js";
 import Movie from "../models/movie.model.js";
 import Theater from "../models/theater.model.js"
 import paymentService from "../services/payment.service.js";
 import { BOOKING_STATUS, STATUS } from "../utils/constant.js";
 import { errorResponseBody, successResponseBody } from "../utils/responseBody.js"
-import axios from "axios";
+import sendMail from "../services/email.service.js";
 
 const createPayment = async(req,res)=>{
     try {
@@ -19,17 +18,14 @@ const createPayment = async(req,res)=>{
             errorResponseBody.data = response;
             return res.status(STATUS.PAYMENT_REQUIRED).json(errorResponseBody);
         }
-        const user =await User.findById(response.userId);
         const movie = await Movie.findById(response.movieId);
         const theater = await Theater.findById(response.theaterId);
         successResponseBody.data = response;
         successResponseBody.message = "Booking completed successfully";
-        console.log("the booking is ",response)
-        axios.post(process.env.NOTI_SERVICE +'/notiService/api/v1/notification/',{
-            subject: "Your booking is successfull",
-            recepientEmails:[user.email],
-            content: `You booking for ${movie.name} in ${theater.name} for ${response.noOfSeats}seats on ${response.timing} is successfull,Your booking id is ${response.id}`
-        })
+        sendMail("Your booking is successfull",
+            response.userId, 
+             `You booking for ${movie.name} in ${theater.name} for ${response.noOfSeats}seats on ${response.timing} is successfull,Your booking id is ${response.id}`
+            );
         return res.status(STATUS.ok).json(successResponseBody);
     } catch (error) {
         if(error.error){

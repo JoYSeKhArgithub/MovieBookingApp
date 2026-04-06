@@ -1,10 +1,11 @@
+import sendMail from '../services/email.service.js';
 import TheaterService from '../services/theater.service.js';
 import { STATUS } from '../utils/constant.js';
 import { errorResponseBody, successResponseBody } from '../utils/responseBody.js';
 
 const createTheater = async(req,res)=>{
     try {
-        const theater = await TheaterService.createTheater(req.body);
+        const theater = await TheaterService.createTheater({...req.body,owner: req.user});
         if(theater.error){
             errorResponseBody.error = theater.error;
             errorResponseBody.message = "Validation Error in creating theater";
@@ -12,6 +13,7 @@ const createTheater = async(req,res)=>{
         }
         successResponseBody.data = theater;
         successResponseBody.message = "Theater created successfully";
+        sendMail("Succefully created a theater",req.user,"You have successfully created a new Theater")
         return res.status(STATUS.CREATED).json(successResponseBody);
     } catch (error) {
         errorResponseBody.error = error;
